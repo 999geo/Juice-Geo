@@ -209,11 +209,45 @@ body::before {
         font-weight: bold;
     }
 </style>
-<form action="https://juice-dlp.juice999geo.repl.co/download" method="post">
-  <input type="text" name="song" placeholder="Enter song name" required>
-  <input type="text" name="artist" placeholder="Enter artist name" required>
-  <button type="submit">Download</button>
-</form>
+<!-- Input fields and button -->
+<div id="juice-form">
+  <input type="text" id="song" placeholder="Enter song name" required>
+  <input type="text" id="artist" placeholder="Enter artist name" required>
+  <button onclick="submitToReplit()">Download 🎧</button>
+</div>
+
+<!-- Status message -->
+<p id="status" style="color: yellow; font-weight: bold;"></p>
+
+<script>
+  function submitToReplit() {
+    const song = document.getElementById("song").value.trim();
+    const artist = document.getElementById("artist").value.trim();
+    const status = document.getElementById("status");
+
+    if (!song || !artist) {
+      status.textContent = "❌ Please enter both song and artist.";
+      return;
+    }
+
+    status.textContent = "⏳ Downloading and uploading to GitHub...";
+
+    fetch("https://juice-dlp.juice999geo.repl.co/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `song=${encodeURIComponent(song)}&artist=${encodeURIComponent(artist)}`
+    })
+    .then(res => res.text())
+    .then(text => {
+      status.textContent = `✅ Done: ${text}`;
+    })
+    .catch(err => {
+      status.textContent = `❌ Error: ${err}`;
+    });
+  }
+</script>
 <audio controls>
   <source src="downloads/example.m4a" type="audio/mpeg">
   Your browser does not support the audio element.
