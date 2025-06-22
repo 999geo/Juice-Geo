@@ -247,6 +247,22 @@ body::before {
       status.textContent = `❌ Error: ${err}`;
     });
   }
+ fetch("https://juice-dlp.juice999geo.repl.co/download", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  body: `song=${encodeURIComponent(song)}&artist=${encodeURIComponent(artist)}`
+})
+.then(res => res.text())
+.then(text => {
+  console.log("✅ Server response:", text);
+  status.textContent = text;
+})
+.catch(err => {
+  console.error("❌ JS Fetch Error:", err);
+  status.textContent = "❌ JS Error: " + err.message;
+});
 </script>
 <audio controls>
   <source src="downloads/example.m4a" type="audio/mpeg">
